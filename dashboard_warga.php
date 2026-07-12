@@ -17,6 +17,19 @@ mysqli_data_seek($q_riwayat, 0);
 $q_selesai = mysqli_query($koneksi, "SELECT COUNT(*) as n FROM layanan_surat WHERE nik='$nik' AND status='Selesai'");
 $jml_selesai = mysqli_fetch_assoc($q_selesai)['n'];
 
+// Riwayat pengaduan warga berdasarkan nama (kolom nik mungkin ada atau tidak)
+$has_nik_col = false;
+$chk = mysqli_query($koneksi, "SHOW COLUMNS FROM pengaduan LIKE 'nik'");
+if (mysqli_num_rows($chk) > 0) {
+    $has_nik_col = true;
+    $q_aduan = mysqli_query($koneksi, "SELECT * FROM pengaduan WHERE nik='$nik' ORDER BY tgl_kirim DESC");
+} else {
+    // fallback: cari berdasarkan nama
+    $nama_safe = mysqli_real_escape_string($koneksi, $nama);
+    $q_aduan = mysqli_query($koneksi, "SELECT * FROM pengaduan WHERE nama='$nama_safe' ORDER BY tgl_kirim DESC");
+}
+$total_aduan = mysqli_num_rows($q_aduan);
+
 $pesan = isset($_GET['pesan']) ? $_GET['pesan'] : '';
 $tipe_pesan = "success";
 
@@ -29,12 +42,19 @@ if (isset($_POST['ajax_pengaduan'])) {
     header('Content-Type: application/json');
     $kategori = $_POST['kategori'];
     $pesan_isi = trim($_POST['pesan_pengaduan']);
-    
-    $stmt = mysqli_prepare($koneksi, "INSERT INTO pengaduan (nama, no_hp, kategori, pesan) VALUES (?, '', ?, ?)");
-    mysqli_stmt_bind_param($stmt, "sss", $nama, $kategori, $pesan_isi);
-    
+
+    // Cek apakah kolom nik ada
+    $chk2 = mysqli_query($koneksi, "SHOW COLUMNS FROM pengaduan LIKE 'nik'");
+    if (mysqli_num_rows($chk2) > 0) {
+        $stmt = mysqli_prepare($koneksi, "INSERT INTO pengaduan (nama, nik, no_hp, kategori, pesan) VALUES (?, ?, '', ?, ?)");
+        mysqli_stmt_bind_param($stmt, "ssss", $nama, $nik, $kategori, $pesan_isi);
+    } else {
+        $stmt = mysqli_prepare($koneksi, "INSERT INTO pengaduan (nama, no_hp, kategori, pesan) VALUES (?, '', ?, ?)");
+        mysqli_stmt_bind_param($stmt, "sss", $nama, $kategori, $pesan_isi);
+    }
+
     if (mysqli_stmt_execute($stmt)) {
-        echo json_encode(['status' => 'success', 'msg' => 'Pengaduan berhasil dikirim!']);
+        echo json_encode(['status' => 'success', 'msg' => 'Pengaduan berhasil dikirim! Admin akan segera menindaklanjuti.']);
     } else {
         echo json_encode(['status' => 'error', 'msg' => 'Gagal mengirim pengaduan.']);
     }
@@ -95,6 +115,7 @@ if (isset($_POST['ajax_pengaduan'])) {
             background: #fff; border-right: 1px solid #e2e8f0;
             display: flex; flex-direction: column;
             position: fixed; top: 58px; left: 0; bottom: 0;
+            overflow-y: auto;
         }
         .sidebar-warga .sw-item {
             display: flex; align-items: center; gap: 10px;
@@ -117,11 +138,19 @@ if (isset($_POST['ajax_pengaduan'])) {
         .stat-mini .stat-num { font-size: 28px; font-weight: 800; line-height: 1; }
         .stat-mini .stat-lbl { font-size: 11px; color: #888; margin-top: 4px; }
 
-        /* Surat table card */
-        .surat-table-wrap { background: #fff; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow: hidden; }
-        .surat-table-wrap .table { margin: 0; font-size: 13px; }
-        .surat-table-wrap .table thead th { background: #f8fafc; font-weight: 700; color: #555; border-bottom: 2px solid #e2e8f0; white-space: nowrap; }
+        /* Table card */
+        .table-wrap { background: #fff; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow: hidden; }
+        .table-wrap .table { margin: 0; font-size: 13px; }
+        .table-wrap .table thead th { background: #f8fafc; font-weight: 700; color: #555; border-bottom: 2px solid #e2e8f0; white-space: nowrap; }
         .badge-status { font-size: 0.7rem; padding: 4px 10px; border-radius: 15px; font-weight: 700; }
+
+        /* Aduan card */
+        .aduan-card { background:#fff; border-radius:10px; border-left:4px solid #e2e8f0; padding:14px 16px; box-shadow:0 1px 5px rgba(0,0,0,0.05); transition: all 0.2s; }
+        .aduan-card.baru { border-left-color: #ef4444; }
+        .aduan-card.dibaca { border-left-color: #94a3b8; }
+        .aduan-card.ditindaklanjuti { border-left-color: #22c55e; }
+        .balasan-bubble { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px 14px; margin-top: 10px; font-size: 12.5px; }
+        .balasan-bubble .bubble-label { font-weight: 700; color: #16a34a; font-size: 11px; letter-spacing: 0.03em; margin-bottom: 4px; }
 
         /* Mobile responsive */
         @media (max-width: 768px) {
@@ -162,7 +191,8 @@ if (isset($_POST['ajax_pengaduan'])) {
             <nav class="mt-2">
                 <a href="dashboard_warga.php" class="sw-item active"><i class="fa-solid fa-house"></i> Dashboard</a>
                 <a href="buat_surat.php" class="sw-item"><i class="fa-solid fa-file-circle-plus"></i> Buat Surat Baru</a>
-                <a class="sw-item" data-bs-toggle="modal" data-bs-target="#modalPengaduan" style="cursor:pointer;"><i class="fa-solid fa-comment-dots"></i> Pengaduan</a>
+                <a class="sw-item" data-bs-toggle="modal" data-bs-target="#modalPengaduan" style="cursor:pointer;"><i class="fa-solid fa-comment-dots"></i> Kirim Pengaduan</a>
+                <a href="#riwayat-aduan" class="sw-item"><i class="fa-solid fa-clock-rotate-left"></i> Riwayat Aduan</a>
                 <a href="index.php" class="sw-item"><i class="fa-solid fa-earth-asia"></i> Website Desa</a>
             </nav>
             <div class="mt-auto p-3">
@@ -194,8 +224,8 @@ if (isset($_POST['ajax_pengaduan'])) {
                 </div>
                 <div class="col-4">
                     <div class="stat-mini">
-                        <div class="stat-num text-warning"><?= $total_surat - $jml_selesai ?></div>
-                        <div class="stat-lbl">Proses</div>
+                        <div class="stat-num text-warning"><?= $total_aduan ?></div>
+                        <div class="stat-lbl">Aduan Saya</div>
                     </div>
                 </div>
             </div>
@@ -211,10 +241,10 @@ if (isset($_POST['ajax_pengaduan'])) {
                 <i class="fa-solid fa-chevron-right ms-auto"></i>
             </a>
 
-            <!-- Riwayat -->
-            <div class="surat-table-wrap">
+            <!-- Riwayat Pengajuan Surat -->
+            <div class="table-wrap mb-4">
                 <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
-                    <span class="fw-bold" style="font-size:14px;"><i class="fa-solid fa-clock-rotate-left me-2 text-primary"></i>Riwayat Pengajuan</span>
+                    <span class="fw-bold" style="font-size:14px;"><i class="fa-solid fa-file-lines me-2 text-primary"></i>Riwayat Pengajuan Surat</span>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-hover align-middle">
@@ -257,6 +287,64 @@ if (isset($_POST['ajax_pengaduan'])) {
                     </table>
                 </div>
             </div>
+
+            <!-- ======== Riwayat Pengaduan & Balasan Admin ======== -->
+            <div id="riwayat-aduan">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h6 class="fw-bold mb-0"><i class="fa-solid fa-comment-dots me-2 text-warning"></i>Riwayat Pengaduan Saya</h6>
+                    <button class="btn btn-sm btn-primary rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#modalPengaduan" style="font-size:12px;">
+                        <i class="fa-solid fa-plus me-1"></i> Kirim Pengaduan Baru
+                    </button>
+                </div>
+
+                <?php if ($total_aduan > 0): ?>
+                    <div class="d-flex flex-column gap-3">
+                    <?php while ($aduan = mysqli_fetch_assoc($q_aduan)):
+                        $cls = strtolower($aduan['status']);
+                        $bdg_map = ['Baru' => 'bg-danger', 'Dibaca' => 'bg-secondary', 'Ditindaklanjuti' => 'bg-success'];
+                        $bdg = $bdg_map[$aduan['status']] ?? 'bg-secondary';
+                        $icon_map = ['Pengaduan' => 'fa-triangle-exclamation text-danger', 'Kritik' => 'fa-thumbs-down text-warning', 'Saran' => 'fa-lightbulb text-success'];
+                        $icon = $icon_map[$aduan['kategori']] ?? 'fa-comment text-muted';
+                    ?>
+                    <div class="aduan-card <?= $cls ?>">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <span class="fw-bold" style="font-size:13px;">
+                                    <i class="fa-solid <?= $icon ?> me-1"></i><?= htmlspecialchars($aduan['kategori']) ?>
+                                </span>
+                                <small class="text-muted ms-2"><?= date('d/m/Y H:i', strtotime($aduan['tgl_kirim'])) ?></small>
+                            </div>
+                            <span class="badge <?= $bdg ?> px-2 py-1" style="font-size:10px;"><?= $aduan['status'] ?></span>
+                        </div>
+                        <p class="mb-0 text-dark" style="font-size:13px; line-height:1.6;"><?= nl2br(htmlspecialchars($aduan['pesan'])) ?></p>
+
+                        <!-- Balasan Admin -->
+                        <?php if (!empty($aduan['balasan'])): ?>
+                        <div class="balasan-bubble">
+                            <div class="bubble-label"><i class="fa-solid fa-reply me-1"></i>BALASAN ADMIN DESA:</div>
+                            <div style="color:#166534; line-height:1.6;"><?= nl2br(htmlspecialchars($aduan['balasan'])) ?></div>
+                        </div>
+                        <?php else: ?>
+                        <div class="mt-2" style="font-size:11.5px; color:#94a3b8;">
+                            <i class="fa-regular fa-clock me-1"></i> Menunggu respons dari admin desa...
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                    <?php endwhile; ?>
+                    </div>
+                <?php else: ?>
+                <div class="table-wrap">
+                    <div class="text-center py-5 text-muted">
+                        <i class="fa-solid fa-comment-slash fa-2x mb-2 d-block opacity-25"></i>
+                        <div style="font-size:13px;">Belum ada pengaduan yang Anda kirimkan.</div>
+                        <button class="btn btn-sm btn-primary rounded-pill mt-3 px-4" data-bs-toggle="modal" data-bs-target="#modalPengaduan">
+                            <i class="fa-solid fa-comment-dots me-1"></i> Kirim Pengaduan Pertama
+                        </button>
+                    </div>
+                </div>
+                <?php endif; ?>
+            </div>
+
         </div>
     </div>
 
@@ -271,8 +359,8 @@ if (isset($_POST['ajax_pengaduan'])) {
         <a class="mn-item" data-bs-toggle="modal" data-bs-target="#modalPengaduan" style="cursor:pointer;">
             <i class="fa-solid fa-comment-dots"></i><span>Pengaduan</span>
         </a>
-        <a href="logout_warga.php" class="mn-item">
-            <i class="fa-solid fa-right-from-bracket"></i><span>Keluar</span>
+        <a href="#riwayat-aduan" class="mn-item">
+            <i class="fa-solid fa-clock-rotate-left"></i><span>Riwayat</span>
         </a>
     </nav>
 
@@ -334,12 +422,33 @@ if (isset($_POST['ajax_pengaduan'])) {
                 if(res.status == 'success') {
                     $('#modalPengaduan').modal('hide');
                     $('#formPengaduan')[0].reset();
-                    Swal.fire({ icon: 'success', title: 'Berhasil', text: res.msg, timer: 2000, showConfirmButton: false });
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Pengaduan Terkirim!',
+                        text: res.msg,
+                        confirmButtonColor: '#0f4c81',
+                        confirmButtonText: 'Lihat Riwayat'
+                    }).then(() => {
+                        // Reload untuk tampilkan riwayat terbaru
+                        location.reload();
+                    });
                 } else {
                     Swal.fire({ icon: 'error', title: 'Gagal', text: res.msg });
                 }
             }, 'json');
         });
+
+        <?php if ($pesan): ?>
+        Swal.fire({
+            icon: '<?= $tipe_pesan ?>',
+            title: 'Berhasil!',
+            text: '<?= addslashes($pesan) ?>',
+            timer: 3000,
+            showConfirmButton: false,
+            toast: true,
+            position: 'top-end'
+        });
+        <?php endif; ?>
     });
     </script>
 </body>

@@ -137,7 +137,7 @@ $q_umkm = mysqli_query($koneksi, "SELECT * FROM umkm ORDER BY tgl_tambah DESC");
             </div>
         </div>
         <div class="container-fluid p-4">
-            <?php if ($pesan): ?><div class="alert alert-<?= $tipe ?> alert-dismissible fade show py-2"><?= $pesan ?><button type="button" class="btn-close" data-bs-dismiss="alert"></button></div><?php endif; ?>
+            <?php if ($pesan): ?><div id="phpFlash" data-type="<?= $tipe ?>" data-msg="<?= htmlspecialchars($pesan) ?>" style="display:none;"></div><?php endif; ?>
 
             <!-- Edit Form -->
             <?php if ($edit_data): ?>
@@ -211,7 +211,7 @@ $q_umkm = mysqli_query($koneksi, "SELECT * FROM umkm ORDER BY tgl_tambah DESC");
                                         <td><small><?= htmlspecialchars($r['lokasi']) ?></small></td>
                                         <td>
                                             <a href="?edit=<?= $r['id'] ?>" class="btn btn-sm btn-outline-warning px-2" title="Edit"><i class="fa-solid fa-pen"></i></a>
-                                            <a href="?hapus=<?= $r['id'] ?>" class="btn btn-sm btn-outline-danger px-2" title="Hapus" onclick="return confirm('Hapus data UMKM ini?')"><i class="fa-solid fa-trash"></i></a>
+                                            <button type="button" class="btn btn-sm btn-outline-danger px-2 btn-hapus-umkm" data-id="<?= $r['id'] ?>" data-nama="<?= htmlspecialchars($r['nama_produk'], ENT_QUOTES) ?>" title="Hapus"><i class="fa-solid fa-trash"></i></button>
                                         </td>
                                     </tr>
                                 <?php endwhile; ?>
@@ -269,5 +269,36 @@ $q_umkm = mysqli_query($koneksi, "SELECT * FROM umkm ORDER BY tgl_tambah DESC");
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+    const flash = document.getElementById('phpFlash');
+    if (flash) {
+        const t = flash.dataset.type;
+        Swal.fire({
+            icon: t === 'success' ? 'success' : (t === 'warning' ? 'warning' : 'error'),
+            title: t === 'success' ? 'Berhasil!' : (t === 'warning' ? 'Dihapus!' : 'Gagal!'),
+            text: flash.dataset.msg,
+            timer: 2500, showConfirmButton: false, toast: true, position: 'top-end'
+        });
+    }
+    document.querySelectorAll('.btn-hapus-umkm').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.dataset.id;
+            const nama = this.dataset.nama;
+            Swal.fire({
+                title: 'Hapus Produk UMKM?',
+                html: `Produk <strong>${nama}</strong> akan dihapus permanen.`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: '<i class="fa-solid fa-trash me-1"></i> Hapus',
+                cancelButtonText: 'Batal'
+            }).then(result => {
+                if (result.isConfirmed) window.location.href = '?hapus=' + id;
+            });
+        });
+    });
+    </script>
 </body>
 </html>

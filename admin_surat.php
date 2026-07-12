@@ -66,7 +66,7 @@ $q = mysqli_query($koneksi, "SELECT s.*, p.nama_lengkap, p.alamat FROM layanan_s
         </div>
         <div class="container-fluid p-4">
             <?php if ($pesan): ?>
-                <div class="alert alert-<?= $tipe ?> alert-dismissible fade show py-2"><?= $pesan ?><button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+                <div id="phpFlash" data-type="<?= $tipe ?>" data-msg="<?= htmlspecialchars(strip_tags($pesan)) ?>" style="display:none;"></div>
             <?php endif; ?>
 
             <!-- Filter Tabs -->
@@ -116,7 +116,7 @@ $q = mysqli_query($koneksi, "SELECT s.*, p.nama_lengkap, p.alamat FROM layanan_s
                                                             <option value="<?= $opt ?>" <?= $r['status'] == $opt ? 'selected' : '' ?>><?= $opt ?></option>
                                                         <?php endforeach; ?>
                                                     </select>
-                                                    <button type="submit" name="update_status" class="btn btn-sm btn-primary px-2" title="Simpan"><i class="fa-solid fa-check"></i></button>
+                                                    <button type="submit" name="update_status" class="btn btn-sm btn-primary px-2 btn-update-status" title="Simpan"><i class="fa-solid fa-check"></i></button>
                                                     <?php if ($r['status'] == 'Selesai'): ?>
                                                         <a href="cetak_surat.php?id=<?= $r['id_surat'] ?>&admin=1" target="_blank" class="btn btn-sm btn-success px-2" title="Preview Surat"><i class="fa-solid fa-eye"></i></a>
                                                     <?php endif; ?>
@@ -137,6 +137,19 @@ $q = mysqli_query($koneksi, "SELECT s.*, p.nama_lengkap, p.alamat FROM layanan_s
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+    const flash = document.getElementById('phpFlash');
+    if (flash) {
+        const t = flash.dataset.type;
+        Swal.fire({
+            icon: t === 'success' ? 'success' : (t === 'warning' ? 'warning' : 'error'),
+            title: t === 'success' ? 'Status Diperbarui!' : 'Perhatian!',
+            text: flash.dataset.msg,
+            timer: 2500, showConfirmButton: false, toast: true, position: 'top-end'
+        });
+    }
+    </script>
 </body>
 
 </html>
