@@ -1,28 +1,9 @@
 <?php
 session_start();
-if (isset($_SESSION["is_login"])) {
-    header("location:dashboard.php");
-    exit();
-}
 include "koneksi.php";
 
 $tgl_sekarang = date('Y-m-d');
 
-// // Mengambil data dari tabel absensi dan data (disesuaikan dengan skema lama agar tidak error)
-// $q_hadir = mysqli_query($koneksi, "SELECT COUNT(*) as jml FROM absensi WHERE tanggal='$tgl_sekarang' AND status='Hadir'");
-// $jml_hadir = $q_hadir ? mysqli_fetch_assoc($q_hadir)['jml'] : 0;
-
-// $q_telat = mysqli_query($koneksi, "SELECT COUNT(*) as jml FROM absensi WHERE tanggal='$tgl_sekarang' AND status='Terlambat'");
-// $jml_telat = $q_telat ? mysqli_fetch_assoc($q_telat)['jml'] : 0;
-
-// $q_alpa = mysqli_query($koneksi, "SELECT COUNT(*) as jml FROM absensi WHERE tanggal='$tgl_sekarang' AND status='Alpa'");
-// $jml_alpa = $q_alpa ? mysqli_fetch_assoc($q_alpa)['jml'] : 0;
-
-// // Nilai default/dummy
-// $penduduk_laki = $jml_hadir > 0 ? $jml_hadir : 2145;
-// $penduduk_perempuan = $jml_telat > 0 ? $jml_telat : 2210;
-// $jumlah_kk = $jml_alpa > 0 ? $jml_alpa : 1420;
-// $jumlah_dusun = 4;
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -244,24 +225,12 @@ $tgl_sekarang = date('Y-m-d');
 
 <body>
 
-    <!-- Top Bar -->
-    <!-- <div class="top-bar d-none d-lg-block">
-        <div class="container d-flex justify-content-between">
-            <div>
-                <i class="fa-solid fa-phone me-2"></i> (0334) 123456 &nbsp;&nbsp;|&nbsp;&nbsp;
-                <i class="fa-solid fa-envelope me-2"></i> pemdes@bades.desa.id
-            </div>
-            <div>
-                <a href="login.php" style="margin-right:0;"><i class="fa-solid fa-lock me-1"></i> Login Admin</a>
-            </div>
-        </div>
-    </div> -->
-
     <?php include "komponen_navbar.php"; ?>
 
     <?php include "komponen_hero.php"; ?>
 
-    <?php include "komponen_stats.php"; ?>
+    <?php include "komponen_stats.php";
+    ?>
 
     <!-- Main Content -->
     <section class="main-content container">
@@ -297,26 +266,114 @@ $tgl_sekarang = date('Y-m-d');
             </div>
 
             <div class="col-lg-4" id="layanan">
+                <!-- Widget Transparansi APBDes -->
+                <div class="card-widget mb-4" style="border-top: 4px solid #0f4c81;">
+                    <div class="card-header bg-white border-bottom fw-bold text-primary">
+                        <i class="fa-solid fa-chart-pie me-2"></i>Transparansi APBDes 2025
+                    </div>
+                    <div class="card-body p-3">
+                        <div class="mb-2">
+                            <small class="text-muted d-block" style="font-size:11px;">PENDAPATAN DESA</small>
+                            <span class="fw-bold text-primary" style="font-size:15px;">Rp 2.823.392.100,68</span>
+                        </div>
+                        <div class="mb-2">
+                            <small class="text-muted d-block" style="font-size:11px;">BELANJA DESA</small>
+                            <span class="fw-bold text-success" style="font-size:15px;">Rp 2.450.237.707,00</span>
+                        </div>
+                        <div class="mb-3">
+                            <small class="text-muted d-block" style="font-size:11px;">SILPA</small>
+                            <span class="fw-bold text-warning" style="font-size:14px;">Rp 55.653.986,43</span>
+                        </div>
+                        <a href="apbdes.php" class="btn btn-sm btn-outline-primary w-100 rounded-pill" style="font-size:12px;">
+                            <i class="fa-solid fa-receipt me-1"></i> Rincian Pembangunan 2025 &rarr;
+                        </a>
+                    </div>
+                </div>
+
                 <div class="card-widget">
                     <div class="card-header"><i class="fa-solid fa-concierge-bell me-2"></i>Layanan Mandiri</div>
                     <div class="list-layanan">
-                        <a href="layanan.php"><i class="fa-solid fa-file-lines"></i> Surat Pengantar KTP</a>
-                        <a href="layanan.php"><i class="fa-solid fa-file-lines"></i> Surat Pengantar KK</a>
+                        <a href="layanan.php"><i class="fa-solid fa-file-lines"></i> Surat Pengantar SKCK</a>
+                        <a href="layanan.php"><i class="fa-solid fa-file-lines"></i> Surat Belum Menikah</a>
                         <a href="layanan.php"><i class="fa-solid fa-file-invoice"></i> Surat Keterangan Usaha</a>
                         <a href="layanan.php"><i class="fa-solid fa-file-signature"></i> Surat Keterangan Tidak Mampu</a>
-                        <a href="layanan.php"><i class="fa-solid fa-person-circle-exclamation"></i> Pengaduan Masyarakat</a>
+                        <a href="pengaduan.php"><i class="fa-solid fa-person-circle-exclamation"></i> Pengaduan Masyarakat</a>
                     </div>
                 </div>
 
                 <div class="card-widget">
                     <div class="card-header"><i class="fa-solid fa-map-location-dot me-2"></i>Peta Wilayah Desa</div>
                     <div class="card-body p-0">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3949.123456789012!2d113.12345678901234!3d-8.123456789012345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zOMKwMDcnMjQuNCJTIDExM8KwMDcnMjQuNCJF!5e0!3m2!1sen!2sid!4v1620000000000!5m2!1sen!2sid" width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3949.123456789012!2d113.12345678901234!3d-8.123456789012345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zOMKwMDcnMjQuNCJTIDExM8KwMDcnMjQuNCJF!5e0!3m2!1sen!2sid!4v1620000000000!5m2!1sen!2sid" width="100%" height="220" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- ===== Galeri Kegiatan Desa ===== -->
+    <?php
+    $q_keg = mysqli_query($koneksi,"SELECT * FROM kegiatan_desa WHERE aktif=1 ORDER BY tgl_tambah DESC LIMIT 8");
+    if ($q_keg && mysqli_num_rows($q_keg) > 0):
+    ?>
+    <section class="py-5" style="background:#fff; border-top:1px solid #eee;">
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <h2 class="section-title mb-0">Galeri Kegiatan Desa</h2>
+                <span class="badge bg-primary rounded-pill px-3 py-2" style="font-size:12px;">Terbaru</span>
+            </div>
+            <div class="row g-3">
+            <?php while ($kg = mysqli_fetch_assoc($q_keg)): ?>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="position-relative rounded-3 overflow-hidden shadow-sm" style="padding-bottom:75%; background:#f0f0f0;" onclick="showKegModal('<?= htmlspecialchars($kg['foto'], ENT_QUOTES) ?>','<?= htmlspecialchars($kg['judul'], ENT_QUOTES) ?>','<?= htmlspecialchars($kg['caption'], ENT_QUOTES) ?>','<?= $kg['tgl_kegiatan'] ? date('d F Y', strtotime($kg['tgl_kegiatan'])) : '' ?>')" style="cursor:pointer;">
+                        <img src="<?= htmlspecialchars($kg['foto']) ?>"
+                             style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background-color:#222;transition:transform 0.3s;"
+                             onerror="this.style.display='none'"
+                             class="keg-img"
+                             alt="<?= htmlspecialchars($kg['judul']) ?>">
+                        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.7) 0%,transparent 60%);display:flex;align-items:flex-end;padding:10px;">
+                            <div>
+                                <div class="fw-bold text-white" style="font-size:12px;line-height:1.3;"><?= htmlspecialchars($kg['judul']) ?></div>
+                                <?php if ($kg['tgl_kegiatan']): ?><small class="text-white-50" style="font-size:10px;"><i class="fa-regular fa-calendar me-1"></i><?= date('d M Y', strtotime($kg['tgl_kegiatan'])) ?></small><?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endwhile; ?>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal Kegiatan -->
+    <div class="modal fade" id="modalKeg" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-body p-0 position-relative">
+                    <button type="button" class="btn-close position-absolute top-0 end-0 m-2 bg-white shadow-sm" data-bs-dismiss="modal" style="z-index:10;border-radius:50%;padding:8px;"></button>
+                    <img id="kegModalImg" src="" class="w-100 rounded-top" style="max-height:500px;object-fit:contain;background-color:#111;" alt="">
+                    <div class="p-4">
+                        <h5 class="fw-bold mb-1" id="kegModalJudul"></h5>
+                        <small class="text-muted" id="kegModalTgl"></small>
+                        <p class="mt-2 text-muted" id="kegModalCaption" style="font-size:14px;"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    function showKegModal(foto,judul,caption,tgl) {
+        document.getElementById('kegModalImg').src = foto;
+        document.getElementById('kegModalJudul').textContent = judul;
+        document.getElementById('kegModalTgl').textContent = tgl ? '📅 ' + tgl : '';
+        document.getElementById('kegModalCaption').textContent = caption;
+        new bootstrap.Modal(document.getElementById('modalKeg')).show();
+    }
+    document.querySelectorAll('.keg-img').forEach(img => {
+        img.closest('.position-relative').addEventListener('mouseenter', () => img.style.transform='scale(1.06)');
+        img.closest('.position-relative').addEventListener('mouseleave', () => img.style.transform='scale(1)');
+    });
+    </script>
+    <?php endif; ?>
 
     <?php include "komponen_footer.php"; ?>
 </body>
