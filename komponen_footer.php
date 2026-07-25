@@ -28,18 +28,14 @@
         background-color: #0f4c81;
     }
 
-    .footer p {
-        line-height: 1.6;
-    }
+    .footer p { line-height: 1.6; }
 
     .footer ul {
         padding: 0;
         list-style: none;
     }
 
-    .footer ul li {
-        margin-bottom: 12px;
-    }
+    .footer ul li { margin-bottom: 12px; }
 
     .footer ul li a {
         color: #ccc;
@@ -89,14 +85,13 @@
         text-align: center;
     }
 
-    .footer-bottom strong {
-        color: #aaa;
-    }
+    .footer-bottom strong { color: #aaa; }
 </style>
 
 <footer class="footer">
     <div class="container">
         <div class="row">
+            <!-- Tentang -->
             <div class="col-lg-4 mb-4 mb-lg-0" data-aos="fade-up" data-aos-delay="100">
                 <div class="d-flex align-items-center mb-3">
                     <img src="assets/img/logolumajang.png" alt="Logo Desa" style="width: 50px; margin-right: 15px;">
@@ -112,30 +107,36 @@
                 </div>
             </div>
 
+            <!-- Kontak -->
             <div class="col-lg-4 col-md-6 mb-4 mb-lg-0" data-aos="fade-up" data-aos-delay="200">
-                <h4>Hubungi Kami</h4>
-                <ul class="contact-info">
-                    <li><i class="fa-solid fa-location-dot"></i> Jl. Raya Bades No. 1, Kec. Pasirian, Kab. Lumajang, Jawa Timur 67372</li>
-                    <li><i class="fa-solid fa-phone"></i> (0334) 123456</li>
+                <h4>Kontak &amp; Keamanan Desa</h4>
+                <ul>
+                    <li><i class="fa-solid fa-location-dot"></i> Jl. Raya Bades No. 1, Pasirian, Lumajang 67372</li>
+                    <li><i class="fa-solid fa-phone"></i> Kantor Desa: (0334) 123456</li>
                     <li><i class="fa-solid fa-envelope"></i> pemdes@bades.desa.id</li>
-                    <li><i class="fa-regular fa-clock"></i> Senin - Jumat: 08.00 - 15.00 WIB</li>
+                    <li><i class="fa-solid fa-user-shield"></i> <strong style="color:#ccc;">Babinkamtibmas:</strong> Bripda Apriliando Shandi N.</li>
+                    <li><i class="fa-solid fa-person-military-pointing"></i> <strong style="color:#ccc;">Babinsa:</strong> Sertu Moh. Rohim</li>
+                    <li><i class="fa-regular fa-clock"></i> Senin – Jumat: 08.00 – 15.00 WIB</li>
                 </ul>
             </div>
 
+            <!-- APBDes Ringkasan -->
             <div class="col-lg-4 col-md-6 mb-4 mb-lg-0" data-aos="fade-up" data-aos-delay="300">
-                <h4>Tautan Berguna</h4>
+                <h4>Transparansi APBDes 2025</h4>
                 <ul>
-                    <li><a href="profil.php"><i class="fa-solid fa-angle-right"></i> Profil Desa</a></li>
-                    <li><a href="pemerintahan.php"><i class="fa-solid fa-angle-right"></i> Pemerintahan Desa</a></li>
-                    <li><a href="wisata.php"><i class="fa-solid fa-angle-right"></i> Potensi Wisata</a></li>
-                    <li><a href="berita.php"><i class="fa-solid fa-angle-right"></i> Berita Desa</a></li>
-                    <li><a href="pengaduan.php"><i class="fa-solid fa-angle-right"></i> Pengaduan Masyarakat</a></li>
-                    <li><a href="layanan.php"><i class="fa-solid fa-angle-right"></i> Layanan Mandiri</a></li>
+                    <li><i class="fa-solid fa-sack-dollar text-info"></i> Pendapatan: <strong style="color:#fff;">Rp 2,82 M</strong></li>
+                    <li><i class="fa-solid fa-cart-shopping text-success"></i> Belanja: <strong style="color:#fff;">Rp 2,45 M</strong></li>
+                    <li><i class="fa-solid fa-piggy-bank text-warning"></i> SiLPA: <strong style="color:#fff;">Rp 55,6 Jt</strong></li>
                 </ul>
+                <a href="apbdes.php" class="btn btn-sm btn-outline-light rounded-pill mt-1" style="font-size:12px;">
+                    <i class="fa-solid fa-receipt me-1"></i> Lihat Rincian Lengkap
+                </a>
             </div>
+
         </div>
     </div>
 </footer>
+
 <div class="footer-bottom">
     <div class="container">
         &copy; <?= date('Y') ?> <strong>Pemerintah Desa Bades</strong>. Hak Cipta Dilindungi.<br>
@@ -143,12 +144,10 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- AOS JS (Bootstrap JS sudah dimuat oleh komponen_navbar.php) -->
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
-    AOS.init({
-        duration: 800,
-        once: true,
-        offset: 50
-    });
+    if (typeof AOS !== 'undefined') {
+        AOS.init({ duration: 800, once: true, offset: 50 });
+    }
 </script>
