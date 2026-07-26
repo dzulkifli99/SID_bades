@@ -146,7 +146,7 @@
 <div class="footer-bottom">
     <div class="container">
         &copy; <?= date('Y') ?> <strong>Pemerintah Desa Bades</strong>. Hak Cipta Dilindungi.<br>
-        Dzulkifli Hasbiallah | <a href="https://wa.me/6282335606083" style="color:#0f4c81;" target="_blank"></a>
+        Dzulkifli Hasbiallah | <a href="https://wa.me/62825784880169" style="color:#0f4c81;" target="_blank">Hubungi Kami</a>
     </div>
 </div>
 
