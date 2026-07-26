@@ -28,14 +28,18 @@
         background-color: #0f4c81;
     }
 
-    .footer p { line-height: 1.6; }
+    .footer p {
+        line-height: 1.6;
+    }
 
     .footer ul {
         padding: 0;
         list-style: none;
     }
 
-    .footer ul li { margin-bottom: 12px; }
+    .footer ul li {
+        margin-bottom: 12px;
+    }
 
     .footer ul li a {
         color: #ccc;
@@ -85,7 +89,9 @@
         text-align: center;
     }
 
-    .footer-bottom strong { color: #aaa; }
+    .footer-bottom strong {
+        color: #aaa;
+    }
 </style>
 
 <footer class="footer">
@@ -140,7 +146,7 @@
 <div class="footer-bottom">
     <div class="container">
         &copy; <?= date('Y') ?> <strong>Pemerintah Desa Bades</strong>. Hak Cipta Dilindungi.<br>
-        Sistem Informasi Desa Bades
+        Dzulkifli Hasbiallah | <a href="https://wa.me/6282335606083" style="color:#0f4c81;" target="_blank"></a>
     </div>
 </div>
 
@@ -148,6 +154,10 @@
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
     if (typeof AOS !== 'undefined') {
-        AOS.init({ duration: 800, once: true, offset: 50 });
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 50
+        });
     }
 </script>
