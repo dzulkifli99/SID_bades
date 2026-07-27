@@ -173,7 +173,6 @@ while ($r = mysqli_fetch_assoc($q_umkm)) {
 
     <?php include "komponen_footer.php"; ?>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
     const modalDetail = new bootstrap.Modal(document.getElementById('modalDetail'));
     function showUmkmDetail(data) {
