@@ -9,6 +9,8 @@ $q_ns = mysqli_query($koneksi, "SELECT COUNT(*) as n FROM layanan_surat WHERE st
 $notif_surat = $q_ns ? mysqli_fetch_assoc($q_ns)['n'] : 0;
 $q_np = mysqli_query($koneksi, "SELECT COUNT(*) as n FROM pengaduan WHERE status='Baru'");
 $notif_pengaduan = $q_np ? mysqli_fetch_assoc($q_np)['n'] : 0;
+$q_nw = mysqli_query($koneksi, "SELECT COUNT(*) as n FROM warga_akun WHERE status_akun='Menunggu'");
+$notif_warga = $q_nw ? mysqli_fetch_assoc($q_nw)['n'] : 0;
 ?>
 <style>
 /* Admin Sidebar — shared across all admin pages */
@@ -34,6 +36,7 @@ $notif_pengaduan = $q_np ? mysqli_fetch_assoc($q_np)['n'] : 0;
 .sidebar-item.danger { color: rgba(255,150,150,0.85); }
 .sidebar-item.danger:hover { background: rgba(255,100,100,0.1); color: #fca5a5; }
 .sidebar-badge { background: #ef4444; font-size: 10px; padding: 1px 7px; border-radius: 10px; margin-left: auto; color: #fff; }
+.sidebar-divider { height: 1px; background: rgba(255,255,255,0.07); margin: 4px 16px; }
 
 /* Admin Main Layout */
 .admin-main { margin-left: 240px; min-height: 100vh; }
@@ -44,6 +47,12 @@ $notif_pengaduan = $q_np ? mysqli_fetch_assoc($q_np)['n'] : 0;
     position: sticky; top: 0; z-index: 100;
 }
 .admin-topbar .page-title { font-weight: 700; font-size: 15px; color: #111; }
+.admin-topbar .user-pill {
+    display: flex; align-items: center; gap: 8px;
+    background: #f1f5f9; border-radius: 20px; padding: 6px 14px;
+    font-size: 12px; font-weight: 600; color: #444;
+}
+.admin-topbar .user-pill i { color: #0f4c81; }
 .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 199; }
 .sidebar-overlay.show { display: block; }
 .sidebar-toggle { display: none; }
@@ -72,9 +81,13 @@ $notif_pengaduan = $q_np ? mysqli_fetch_assoc($q_np)['n'] : 0;
 
     <div class="sidebar-section">Master Data</div>
     <a href="admin_penduduk.php" class="sidebar-item <?= $current_page=='admin_penduduk.php'?'active':'' ?>"><i class="fa-solid fa-users"></i> Data Penduduk</a>
-    <a href="admin_akun_warga.php" class="sidebar-item <?= $current_page=='admin_akun_warga.php'?'active':'' ?>"><i class="fa-solid fa-user-lock"></i> Akun Warga</a>
+    <a href="admin_akun_warga.php" class="sidebar-item <?= $current_page=='admin_akun_warga.php'?'active':'' ?>">
+        <i class="fa-solid fa-user-lock"></i> Akun Warga
+        <?php if($notif_warga>0): ?><span class="sidebar-badge" style="background:#f59e0b;"><?= $notif_warga ?></span><?php endif; ?>
+    </a>
     <a href="admin_statistik.php" class="sidebar-item <?= $current_page=='admin_statistik.php'?'active':'' ?>"><i class="fa-solid fa-chart-pie"></i> Statistik Desa</a>
     <a href="admin_umkm.php" class="sidebar-item <?= $current_page=='admin_umkm.php'?'active':'' ?>"><i class="fa-solid fa-store"></i> Kelola UMKM</a>
+    <a href="admin_struktur.php" class="sidebar-item <?= $current_page=='admin_struktur.php'?'active':'' ?>"><i class="fa-solid fa-sitemap"></i> Struktur Desa</a>
 
     <div class="sidebar-section">Layanan Warga</div>
     <a href="admin_surat.php" class="sidebar-item <?= $current_page=='admin_surat.php'?'active':'' ?>">
@@ -86,9 +99,15 @@ $notif_pengaduan = $q_np ? mysqli_fetch_assoc($q_np)['n'] : 0;
         <?php if($notif_pengaduan>0): ?><span class="sidebar-badge"><?= $notif_pengaduan ?></span><?php endif; ?>
     </a>
 
-    <div class="sidebar-section">Konten</div>
+    <div class="sidebar-section">Konten Website</div>
     <a href="admin_berita.php" class="sidebar-item <?= $current_page=='admin_berita.php'?'active':'' ?>"><i class="fa-solid fa-newspaper"></i> Kelola Berita</a>
+    <a href="admin_kegiatan.php" class="sidebar-item <?= $current_page=='admin_kegiatan.php'?'active':'' ?>"><i class="fa-solid fa-photo-film"></i> Galeri Kegiatan</a>
+    <a href="admin_hero.php" class="sidebar-item <?= $current_page=='admin_hero.php'?'active':'' ?>"><i class="fa-solid fa-images"></i> Foto Hero/Slider</a>
 
+    <div class="sidebar-section">Pengaturan</div>
+    <a href="admin_akun.php" class="sidebar-item <?= $current_page=='admin_akun.php'?'active':'' ?>"><i class="fa-solid fa-key"></i> Kelola Akun Admin</a>
+
+    <div class="sidebar-divider"></div>
     <div class="sidebar-section">Akses Cepat</div>
     <a href="index.php" target="_blank" class="sidebar-item"><i class="fa-solid fa-earth-asia"></i> Lihat Website</a>
     <a href="logout.php" class="sidebar-item danger"><i class="fa-solid fa-right-from-bracket"></i> Keluar</a>
