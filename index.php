@@ -304,7 +304,7 @@ $tgl_sekarang = date('Y-m-d');
                 <div class="card-widget">
                     <div class="card-header"><i class="fa-solid fa-map-location-dot me-2"></i>Peta Wilayah Desa</div>
                     <div class="card-body p-0">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3949.123456789012!2d113.12345678901234!3d-8.123456789012345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zOMKwMDcnMjQuNCJTIDExM8KwMDcnMjQuNCJF!5e0!3m2!1sen!2sid!4v1620000000000!5m2!1sen!2sid" width="100%" height="220" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                        <iframe src="https://maps.app.goo.gl/SAgPrtpB3vV7NBMQA" width="100%" height="220" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
                     </div>
                 </div>
             </div>
@@ -313,66 +313,66 @@ $tgl_sekarang = date('Y-m-d');
 
     <!-- ===== Galeri Kegiatan Desa ===== -->
     <?php
-    $q_keg = mysqli_query($koneksi,"SELECT * FROM kegiatan_desa WHERE aktif=1 ORDER BY tgl_tambah DESC LIMIT 8");
+    $q_keg = mysqli_query($koneksi, "SELECT * FROM kegiatan_desa WHERE aktif=1 ORDER BY tgl_tambah DESC LIMIT 8");
     if ($q_keg && mysqli_num_rows($q_keg) > 0):
     ?>
-    <section class="py-5" style="background:#fff; border-top:1px solid #eee;">
-        <div class="container">
-            <div class="d-flex align-items-center justify-content-between mb-4">
-                <h2 class="section-title mb-0">Galeri Kegiatan Desa</h2>
-                <span class="badge bg-primary rounded-pill px-3 py-2" style="font-size:12px;">Terbaru</span>
-            </div>
-            <div class="row g-3">
-            <?php while ($kg = mysqli_fetch_assoc($q_keg)): ?>
-                <div class="col-6 col-md-4 col-lg-3">
-                    <div class="position-relative rounded-3 overflow-hidden shadow-sm" style="padding-bottom:75%; background:#f0f0f0;" onclick="showKegModal('<?= htmlspecialchars($kg['foto'], ENT_QUOTES) ?>','<?= htmlspecialchars($kg['judul'], ENT_QUOTES) ?>','<?= htmlspecialchars($kg['caption'], ENT_QUOTES) ?>','<?= $kg['tgl_kegiatan'] ? date('d F Y', strtotime($kg['tgl_kegiatan'])) : '' ?>')" style="cursor:pointer;">
-                        <img src="<?= htmlspecialchars($kg['foto']) ?>"
-                             style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background-color:#222;transition:transform 0.3s;"
-                             onerror="this.style.display='none'"
-                             class="keg-img"
-                             alt="<?= htmlspecialchars($kg['judul']) ?>">
-                        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.7) 0%,transparent 60%);display:flex;align-items:flex-end;padding:10px;">
-                            <div>
-                                <div class="fw-bold text-white" style="font-size:12px;line-height:1.3;"><?= htmlspecialchars($kg['judul']) ?></div>
-                                <?php if ($kg['tgl_kegiatan']): ?><small class="text-white-50" style="font-size:10px;"><i class="fa-regular fa-calendar me-1"></i><?= date('d M Y', strtotime($kg['tgl_kegiatan'])) ?></small><?php endif; ?>
+        <section class="py-5" style="background:#fff; border-top:1px solid #eee;">
+            <div class="container">
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <h2 class="section-title mb-0">Galeri Kegiatan Desa</h2>
+                    <span class="badge bg-primary rounded-pill px-3 py-2" style="font-size:12px;">Terbaru</span>
+                </div>
+                <div class="row g-3">
+                    <?php while ($kg = mysqli_fetch_assoc($q_keg)): ?>
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <div class="position-relative rounded-3 overflow-hidden shadow-sm" style="padding-bottom:75%; background:#f0f0f0;" onclick="showKegModal('<?= htmlspecialchars($kg['foto'], ENT_QUOTES) ?>','<?= htmlspecialchars($kg['judul'], ENT_QUOTES) ?>','<?= htmlspecialchars($kg['caption'], ENT_QUOTES) ?>','<?= $kg['tgl_kegiatan'] ? date('d F Y', strtotime($kg['tgl_kegiatan'])) : '' ?>')" style="cursor:pointer;">
+                                <img src="<?= htmlspecialchars($kg['foto']) ?>"
+                                    style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background-color:#222;transition:transform 0.3s;"
+                                    onerror="this.style.display='none'"
+                                    class="keg-img"
+                                    alt="<?= htmlspecialchars($kg['judul']) ?>">
+                                <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.7) 0%,transparent 60%);display:flex;align-items:flex-end;padding:10px;">
+                                    <div>
+                                        <div class="fw-bold text-white" style="font-size:12px;line-height:1.3;"><?= htmlspecialchars($kg['judul']) ?></div>
+                                        <?php if ($kg['tgl_kegiatan']): ?><small class="text-white-50" style="font-size:10px;"><i class="fa-regular fa-calendar me-1"></i><?= date('d M Y', strtotime($kg['tgl_kegiatan'])) ?></small><?php endif; ?>
+                                    </div>
+                                </div>
                             </div>
+                        </div>
+                    <?php endwhile; ?>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal Kegiatan -->
+        <div class="modal fade" id="modalKeg" tabindex="-1">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content border-0 shadow">
+                    <div class="modal-body p-0 position-relative">
+                        <button type="button" class="btn-close position-absolute top-0 end-0 m-2 bg-white shadow-sm" data-bs-dismiss="modal" style="z-index:10;border-radius:50%;padding:8px;"></button>
+                        <img id="kegModalImg" src="" class="w-100 rounded-top" style="max-height:500px;object-fit:contain;background-color:#111;" alt="">
+                        <div class="p-4">
+                            <h5 class="fw-bold mb-1" id="kegModalJudul"></h5>
+                            <small class="text-muted" id="kegModalTgl"></small>
+                            <p class="mt-2 text-muted" id="kegModalCaption" style="font-size:14px;"></p>
                         </div>
                     </div>
                 </div>
-            <?php endwhile; ?>
             </div>
         </div>
-    </section>
-
-    <!-- Modal Kegiatan -->
-    <div class="modal fade" id="modalKeg" tabindex="-1">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content border-0 shadow">
-                <div class="modal-body p-0 position-relative">
-                    <button type="button" class="btn-close position-absolute top-0 end-0 m-2 bg-white shadow-sm" data-bs-dismiss="modal" style="z-index:10;border-radius:50%;padding:8px;"></button>
-                    <img id="kegModalImg" src="" class="w-100 rounded-top" style="max-height:500px;object-fit:contain;background-color:#111;" alt="">
-                    <div class="p-4">
-                        <h5 class="fw-bold mb-1" id="kegModalJudul"></h5>
-                        <small class="text-muted" id="kegModalTgl"></small>
-                        <p class="mt-2 text-muted" id="kegModalCaption" style="font-size:14px;"></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script>
-    function showKegModal(foto,judul,caption,tgl) {
-        document.getElementById('kegModalImg').src = foto;
-        document.getElementById('kegModalJudul').textContent = judul;
-        document.getElementById('kegModalTgl').textContent = tgl ? '📅 ' + tgl : '';
-        document.getElementById('kegModalCaption').textContent = caption;
-        new bootstrap.Modal(document.getElementById('modalKeg')).show();
-    }
-    document.querySelectorAll('.keg-img').forEach(img => {
-        img.closest('.position-relative').addEventListener('mouseenter', () => img.style.transform='scale(1.06)');
-        img.closest('.position-relative').addEventListener('mouseleave', () => img.style.transform='scale(1)');
-    });
-    </script>
+        <script>
+            function showKegModal(foto, judul, caption, tgl) {
+                document.getElementById('kegModalImg').src = foto;
+                document.getElementById('kegModalJudul').textContent = judul;
+                document.getElementById('kegModalTgl').textContent = tgl ? '📅 ' + tgl : '';
+                document.getElementById('kegModalCaption').textContent = caption;
+                new bootstrap.Modal(document.getElementById('modalKeg')).show();
+            }
+            document.querySelectorAll('.keg-img').forEach(img => {
+                img.closest('.position-relative').addEventListener('mouseenter', () => img.style.transform = 'scale(1.06)');
+                img.closest('.position-relative').addEventListener('mouseleave', () => img.style.transform = 'scale(1)');
+            });
+        </script>
     <?php endif; ?>
 
     <?php include "komponen_footer.php"; ?>
