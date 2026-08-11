@@ -1,9 +1,14 @@
 <style>
     /* ── Footer ── */
     .footer {
+        position: relative;
         background-color: #1a2226;
+        background-image: linear-gradient(135deg, rgba(15, 76, 129, 0.92) 0%, rgba(12, 58, 42, 0.9) 100%), url('assets/img/dampar.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
         color: #ccc;
-        padding: 60px 0 30px;
+        padding: 60px 0 45px;
         font-size: 14px;
         margin-top: 50px;
         border-top: 4px solid #0f4c81;
@@ -81,6 +86,40 @@
         transform: translateY(-3px);
     }
 
+    /* ── Watermark "DESA BADES" (satu teks besar, berjalan ke kiri di tengah footer) ── */
+    .footer-watermark {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        white-space: nowrap;
+        font-size: clamp(56px, 9vw, 150px);
+        font-weight: 800;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.1);
+        -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.4);
+        text-stroke: 1.5px rgba(255, 255, 255, 0.4);
+        pointer-events: none;
+        z-index: 0;
+        animation: watermark-walk 24s linear infinite;
+    }
+
+    @keyframes watermark-walk {
+        from {
+            transform: translateY(-50%) translateX(100vw);
+        }
+
+        to {
+            transform: translateY(-50%) translateX(-120%);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .footer-watermark {
+            letter-spacing: 2px;
+        }
+    }
+
     .footer-bottom {
         background-color: #111;
         padding: 20px 0;
@@ -94,8 +133,9 @@
     }
 </style>
 
-<footer class="footer">
-    <div class="container">
+<footer class="footer" style="overflow:hidden;">
+    <span class="footer-watermark">DESA BADES KECAMATAN PASIRIAN KABUPATEN LUMAJANG</span>
+    <div class="container" style="position:relative; z-index:1;">
         <div class="row">
             <!-- Tentang -->
             <div class="col-lg-4 mb-4 mb-lg-0" data-aos="fade-up" data-aos-delay="100">
@@ -106,6 +146,11 @@
                     </div>
                 </div>
                 <p>Sistem Informasi Desa (SID) Bades, Kecamatan Pasirian, Kabupaten Lumajang. Media komunikasi dan transparansi pemerintah desa untuk masyarakat.</p>
+                <ul>
+                    <li><i class="fa-solid fa-location-dot"></i> Jl. Raya Bades No. 1, Pasirian, Lumajang 67372</li>
+                    <li><i class="fa-solid fa-phone"></i> Kantor Desa: (0334) 123456</li>
+                    <li><i class="fa-solid fa-envelope"></i> pemdes@bades.desa.id</li>
+                </ul>
                 <div class="social-links">
                     <a href="https://www.instagram.com/kimbimagatra/" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
                     <a href="https://www.youtube.com/@desa_bades" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
@@ -113,31 +158,9 @@
                 </div>
             </div>
 
-            <!-- Kontak -->
-            <div class="col-lg-4 col-md-6 mb-4 mb-lg-0" data-aos="fade-up" data-aos-delay="200">
-                <h4>Kontak &amp; Keamanan Desa</h4>
-                <ul>
-                    <li><i class="fa-solid fa-location-dot"></i> Jl. Raya Bades No. 1, Pasirian, Lumajang 67372</li>
-                    <li><i class="fa-solid fa-phone"></i> Kantor Desa: (0334) 123456</li>
-                    <li><i class="fa-solid fa-envelope"></i> pemdes@bades.desa.id</li>
-                    <li><i class="fa-solid fa-user-shield"></i> <strong style="color:#ccc;">Babinkamtibmas:</strong> Bripda Apriliando Shandi N.</li>
-                    <li><i class="fa-solid fa-person-military-pointing"></i> <strong style="color:#ccc;">Babinsa:</strong> Sertu Moh. Rohim</li>
-                    <li><i class="fa-regular fa-clock"></i> Senin – Jumat: 08.00 – 15.00 WIB</li>
-                </ul>
-            </div>
 
-            <!-- APBDes Ringkasan -->
-            <div class="col-lg-4 col-md-6 mb-4 mb-lg-0" data-aos="fade-up" data-aos-delay="300">
-                <h4>Transparansi APBDes 2025</h4>
-                <ul>
-                    <li><i class="fa-solid fa-sack-dollar text-info"></i> Pendapatan: <strong style="color:#fff;">Rp 2,82 M</strong></li>
-                    <li><i class="fa-solid fa-cart-shopping text-success"></i> Belanja: <strong style="color:#fff;">Rp 2,45 M</strong></li>
-                    <li><i class="fa-solid fa-piggy-bank text-warning"></i> SiLPA: <strong style="color:#fff;">Rp 55,6 Jt</strong></li>
-                </ul>
-                <a href="apbdes.php" class="btn btn-sm btn-outline-light rounded-pill mt-1" style="font-size:12px;">
-                    <i class="fa-solid fa-receipt me-1"></i> Lihat Rincian Lengkap
-                </a>
-            </div>
+
+
 
         </div>
     </div>
@@ -146,7 +169,6 @@
 <div class="footer-bottom">
     <div class="container">
         &copy; <?= date('Y') ?> <strong>Pemerintah Desa Bades</strong>. Hak Cipta Dilindungi.<br>
-        Dzulkifli Hasbiallah | <a href="https://wa.me/6285784880169" style="color:#0f4c81;" target="_blank">Hubungi Kami</a>
     </div>
 </div>
 
