@@ -8,22 +8,22 @@
         background-position: center;
         background-repeat: no-repeat;
         color: #ccc;
-        padding: 60px 0 45px;
-        font-size: 14px;
-        margin-top: 50px;
+        padding: 10px 0 8px;
+        font-size: 12px;
+        margin-top: 10px;
         border-top: 4px solid #0f4c81;
     }
 
-    .footer h4 {
+    .footer .footer-brand {
         color: #fff;
-        font-size: 18px;
+        font-size: 16px;
         font-weight: 700;
-        margin-bottom: 25px;
+        margin-bottom: 14px;
         position: relative;
-        padding-bottom: 10px;
+        padding-bottom: 8px;
     }
 
-    .footer h4::after {
+    .footer .footer-brand::after {
         content: '';
         position: absolute;
         left: 0;
@@ -43,7 +43,7 @@
     }
 
     .footer ul li {
-        margin-bottom: 12px;
+        margin-bottom: 7px;
     }
 
     .footer ul li a {
@@ -59,21 +59,21 @@
 
     .footer ul li i {
         margin-right: 8px;
-        color: #0f4c81;
+        color: #fff;
     }
 
     .social-links {
         display: flex;
-        gap: 10px;
-        margin-top: 20px;
+        gap: 8px;
+        margin-top: 12px;
     }
 
     .social-links a {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 40px;
-        height: 40px;
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
         background-color: rgba(255, 255, 255, 0.1);
         color: #fff;
@@ -92,9 +92,9 @@
         top: 50%;
         left: 0;
         white-space: nowrap;
-        font-size: clamp(56px, 9vw, 150px);
+        font-size: clamp(30px, 5vw, 80px);
         font-weight: 800;
-        letter-spacing: 4px;
+        letter-spacing: 3px;
         text-transform: uppercase;
         color: rgba(255, 255, 255, 0.1);
         -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.4);
@@ -122,9 +122,9 @@
 
     .footer-bottom {
         background-color: #111;
-        padding: 20px 0;
+        padding: 12px 0;
         color: #888;
-        font-size: 13px;
+        font-size: 12px;
         text-align: center;
     }
 
@@ -138,14 +138,14 @@
     <div class="container" style="position:relative; z-index:1;">
         <div class="row">
             <!-- Tentang -->
-            <div class="col-lg-4 mb-4 mb-lg-0" data-aos="fade-up" data-aos-delay="100">
-                <div class="d-flex align-items-center mb-3">
-                    <img src="assets/img/logolumajang.png" alt="Logo Desa" style="width: 50px; margin-right: 15px;">
+            <div class="col-lg-4 mb-0" data-aos="fade-up" data-aos-delay="100">
+                <div class="d-flex align-items-center mb-2">
+                    <img src="assets/img/logolumajang.png" alt="Logo Desa" style="width: 36px; margin-right: 10px;">
                     <div>
-                        <h4 class="mb-0" style="border:none; padding:0;">DESA BADES</h4>
+                        <div class="mb-0 footer-brand" style="border:none; padding:0;">DESA BADES</div>
                     </div>
                 </div>
-                <p>Sistem Informasi Desa (SID) Bades, Kecamatan Pasirian, Kabupaten Lumajang. Media komunikasi dan transparansi pemerintah desa untuk masyarakat.</p>
+                <p class="mb-2" style="font-size:13px; line-height:1.4;">Sistem Informasi Desa (SID) Bades, Kecamatan Pasirian, Kabupaten Lumajang. Media komunikasi dan transparansi pemerintah desa untuk masyarakat.</p>
                 <ul>
                     <li><i class="fa-solid fa-location-dot"></i> Jl. Raya Bades No. 1, Pasirian, Lumajang 67372</li>
                     <li><i class="fa-solid fa-phone"></i> Kantor Desa: (0334) 123456</li>
